@@ -1,4 +1,4 @@
-import noContact from '/Hands_Contact.png';
+import noContact from '../assets/Hands_Contact.png';
 
 const NotFoundContact = () => {
   return (

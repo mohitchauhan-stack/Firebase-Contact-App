@@ -2,6 +2,8 @@ import { createPortal } from 'react-dom';
 import { AiOutlineClose } from 'react-icons/ai';
 
 const Modal = ({ onClose, isOpen, children }) => {
+  const modalRoot = document.getElementById('modal-root');
+  if (!modalRoot) return null;
   return createPortal(
     <>
       {isOpen && (
@@ -15,7 +17,7 @@ const Modal = ({ onClose, isOpen, children }) => {
         </div>
       )}
     </>,
-    document.getElementById('modal-root')
+    modalRoot
   );
 };
 

@@ -48,7 +48,7 @@ const App = () => {
       });
 
       const filteredContact = contactLists.filter((contact) =>
-        contact.Name.toLowerCase().includes(value.toLowerCase())
+        (contact.Name || '').toLowerCase().includes(value.toLowerCase())
       );
 
       setContacts(filteredContact);
