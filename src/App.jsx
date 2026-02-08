@@ -6,6 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import AddUpdateContact from './components/AddUpdateContact';
 import ContactCard from './components/ContactCard';
 import Navbar from './components/Navbar';
+import NotFoundContact from './components/NotFoundContact';
 import { db } from './config/firebase';
 import useDiscloser from './hooks/useDiscloser';
 
@@ -74,9 +75,11 @@ const App = () => {
           <AiFillPlusCircle onClick={onOpen} className="cursor-pointer text-5xl text-white" />
         </div>
         <div className="mt-3 flex flex-col gap-2">
-          {contacts.map((contact) => (
-            <ContactCard contact={contact} key={contact.id} />
-          ))}
+          {contacts.length <= 0 ? (
+            <NotFoundContact />
+          ) : (
+            contacts.map((contact) => <ContactCard contact={contact} key={contact.id} />)
+          )}
         </div>
       </div>
       <AddUpdateContact onClose={onClose} isOpen={isOpen} />
