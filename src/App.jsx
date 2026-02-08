@@ -1,7 +1,8 @@
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { AiFillPlusCircle } from 'react-icons/ai';
 import { IoSearch } from 'react-icons/io5';
+import { ToastContainer } from 'react-toastify';
 import AddUpdateContact from './components/AddUpdateContact';
 import ContactCard from './components/ContactCard';
 import Navbar from './components/Navbar';
@@ -17,14 +18,16 @@ const App = () => {
     const getContacts = async () => {
       try {
         const contactsRef = collection(db, 'contacts');
-        const contactSnapShot = await getDocs(contactsRef);
-        const contactLists = contactSnapShot.docs.map((doc) => {
-          return {
-            id: doc.id,
-            ...doc.data(),
-          };
+        onSnapshot(contactsRef, (snapshot) => {
+          const contactLists = snapshot.docs.map((doc) => {
+            return {
+              id: doc.id,
+              ...doc.data(),
+            };
+          });
+          setContacts(contactLists);
+          return contactLists;
         });
-        setContacts(contactLists);
       } catch (error) {
         console.log(error);
       }
@@ -56,6 +59,7 @@ const App = () => {
         </div>
       </div>
       <AddUpdateContact onClose={onClose} isOpen={isOpen} />
+      <ToastContainer position="bottom-center" />
     </>
   );
 };

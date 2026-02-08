@@ -1,13 +1,26 @@
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 import { Field, Form, Formik } from 'formik';
+import { toast } from 'react-toastify';
 import { db } from '../config/firebase';
 import Modal from './Modal';
 
-const AddUpdateContact = ({ isOpen, onClose, isUpdate }) => {
+const AddUpdateContact = ({ isOpen, onClose, isUpdate, contact }) => {
   const addContact = async (contact) => {
     try {
       const contactRef = collection(db, 'contacts');
       await addDoc(contactRef, contact);
+      toast.success('Contact added');
+      onClose();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const updateContact = async (contact, id) => {
+    try {
+      const contactRef = doc(db, 'contacts', id);
+      await updateDoc(contactRef, contact);
+      toast.success('Contact updated');
+      onClose();
     } catch (error) {
       console.log(error);
     }
@@ -17,13 +30,20 @@ const AddUpdateContact = ({ isOpen, onClose, isUpdate }) => {
     <div>
       <Modal isOpen={isOpen} onClose={onClose}>
         <Formik
-          initialValues={{
-            Name: '',
-            Email: '',
-          }}
+          initialValues={
+            isUpdate
+              ? {
+                  Name: contact.Name,
+                  Email: contact.Email,
+                }
+              : {
+                  Name: '',
+                  Email: '',
+                }
+          }
           onSubmit={(values) => {
             console.log(values);
-            addContact(values);
+            isUpdate ? updateContact(values, contact.id) : addContact(values);
           }}
         >
           <Form className="flex flex-col gap-2">

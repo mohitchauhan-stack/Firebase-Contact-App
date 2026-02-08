@@ -2,6 +2,7 @@ import { deleteDoc, doc } from 'firebase/firestore';
 import { HiOutlineUserCircle } from 'react-icons/hi';
 import { IoMdTrash } from 'react-icons/io';
 import { RiEditCircleLine } from 'react-icons/ri';
+import { toast } from 'react-toastify';
 import { db } from '../config/firebase';
 import useDiscloser from '../hooks/useDiscloser';
 import AddUpdateContact from './AddUpdateContact';
@@ -12,6 +13,7 @@ const ContactCard = ({ contact }) => {
   const deleteContact = async (id) => {
     try {
       await deleteDoc(doc(db, 'contacts', id));
+      toast.success('Contact deleted');
     } catch (error) {
       console.log(error);
     }
@@ -38,7 +40,7 @@ const ContactCard = ({ contact }) => {
           />
         </div>
       </div>
-      <AddUpdateContact isUpdate isOpen={isOpen} onClose={onClose} />
+      <AddUpdateContact contact={contact} isUpdate isOpen={isOpen} onClose={onClose} />
     </>
   );
 };
