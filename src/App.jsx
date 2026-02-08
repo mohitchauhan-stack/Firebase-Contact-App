@@ -35,6 +35,26 @@ const App = () => {
     getContacts();
   }, []);
 
+  const filterContact = (event) => {
+    const value = event.target.value;
+    const contactsRef = collection(db, 'contacts');
+    onSnapshot(contactsRef, (snapshot) => {
+      const contactLists = snapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+
+      const filteredContact = contactLists.filter((contact) =>
+        contact.Name.toLowerCase().includes(value.toLowerCase())
+      );
+
+      setContacts(filteredContact);
+      return filteredContact;
+    });
+  };
+
   return (
     <>
       <div className="mx-auto max-w-92.5">
@@ -43,6 +63,7 @@ const App = () => {
           <div className="relative flex grow items-center">
             <IoSearch className="absolute ml-1 text-3xl text-white" />
             <input
+              onChange={filterContact}
               type="text"
               name="contact"
               id="contact"
