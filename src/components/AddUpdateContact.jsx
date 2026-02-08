@@ -1,8 +1,14 @@
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
-import { Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { toast } from 'react-toastify';
+import * as Yup from 'yup';
 import { db } from '../config/firebase';
 import Modal from './Modal';
+
+const contactSchemaValidation = Yup.object().shape({
+  Name: Yup.string().required('Name is required'),
+  Email: Yup.string().email('Invalid email').required('Email is required'),
+});
 
 const AddUpdateContact = ({ isOpen, onClose, isUpdate, contact }) => {
   const addContact = async (contact) => {
@@ -30,6 +36,7 @@ const AddUpdateContact = ({ isOpen, onClose, isUpdate, contact }) => {
     <div>
       <Modal isOpen={isOpen} onClose={onClose}>
         <Formik
+          validationSchema={contactSchemaValidation}
           initialValues={
             isUpdate
               ? {
@@ -50,10 +57,16 @@ const AddUpdateContact = ({ isOpen, onClose, isUpdate, contact }) => {
             <div className="flex flex-col gap-1 text-black">
               <label htmlFor="Name">Name</label>
               <Field name="Name" className="h-10 border" />
+              <div className="text-red-300">
+                <ErrorMessage name="Name" />
+              </div>
             </div>
             <div className="flex flex-col gap-1 text-black">
               <label htmlFor="Email">Email</label>
               <Field type="email" name="Email" className="h-10 border" />
+              <div className="text-red-300">
+                <ErrorMessage name="Email" />
+              </div>
             </div>
             <button
               type="submit"
